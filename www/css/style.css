@@ -1,0 +1,22 @@
+.dimension-img
+{
+	margin-left: auto;
+  	margin-right: auto;
+    width:20em;
+}
+
+.dimension-img-members
+{
+    width:10em;
+}
+
+.image-click
+{
+	cursor:pointer
+}
+
+.text-center
+{
+	text-align : center
+}
+

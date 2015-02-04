@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css" />
+	<link href="../css/style.css" rel="stylesheet">
+	<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+</head>
+<body>
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Acquitter un membre</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeDischarge()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+
+    <form ng-submit="doDischarge()">
+      <div class="list">
+        <label class="item">
+          <p>
+          	Acquitter la dette de <b>{{modalData.firstname}} {{modalData.name}}</b> ?
+          </p>
+        </label>
+        <label class="item">
+          <button class="button button-block button-balanced" type="submit">Acquitter</button>
+        </label>
+      </div>
+    </form>
+						
+  </ion-content>
+</ion-modal-view>
+
+</body>
+</html>
