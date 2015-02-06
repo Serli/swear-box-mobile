@@ -38,12 +38,23 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     }
   })
+  
+    .state('app.logout', {
+    url: "/logout",
+    views: {
+      'menuContent': {
+        templateUrl: "html/logout.html",
+		controller: 'LogoutCtrl'
+      }
+    }
+  })
+  
     .state('app.admin', {
       url: "/admin",
       views: {
         'menuContent': {
           templateUrl: "html/admin.html",
-          controller: 'MembersCtrl'
+          controller: 'AdminCtrl'
         }
       }
     })
@@ -53,12 +64,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     views: {
       'menuContent': {
         templateUrl: "html/member.html",
-        controller: 'MembersCtrl'
+        controller: 'AdminCtrl'
       }
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
+  $urlRouterProvider.otherwise('/app/members');
   
   delete $httpProvider.defaults.headers.common['X-Requested-With'];
 });

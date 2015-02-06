@@ -8,13 +8,8 @@ angular.module('starter.controllers', [])
 	
 	var baseURL = "https://iswearbox.herokuapp.com"
 	
-	$scope.idMember = $stateParams.idMember;
 	$rootScope.members = {};
-	$scope.amountTag = '';
-	$scope.error = 'error';
-	
 	getMembers();
-	getAmount();
 
 	/*----------------------------------------------------------------------*
 	 *----------------------------- FUNCTIONS ------------------------------*
@@ -30,6 +25,38 @@ angular.module('starter.controllers', [])
 		.error(function(data, status, headers, config){
 		});
 	};
+
+	//Get the list of members
+	//---------------------------------------------------
+	function getMembers() {
+		$http.get(baseURL +'/members')
+		.success(function(data, status, headers, config){
+			$rootScope.members = data;
+		})
+		.error(function(data, status, headers, config){
+		});
+	};
+	
+})
+
+.controller('AdminCtrl', function($scope, $ionicModal, $http, $stateParams, $rootScope, $location) {
+	
+	/*----------------------------------------------------------------------*
+	 *--------------------------- INITIALISATION ---------------------------*
+	 *----------------------------------------------------------------------*/
+	
+	var baseURL = "https://iswearbox.herokuapp.com"
+	
+	$scope.idMember = $stateParams.idMember;
+
+	$scope.amountTag = '';
+	
+	getMembers();
+	getAmount();
+
+	/*----------------------------------------------------------------------*
+	 *----------------------------- FUNCTIONS ------------------------------*
+	 *----------------------------------------------------------------------*/
 
 	//Get the list of members
 	//---------------------------------------------------
@@ -322,7 +349,7 @@ angular.module('starter.controllers', [])
 	};
 })
 
-.controller('LoginCtrl', function($scope) {
+.controller('LoginCtrl', function($scope, $state) {
 	
 	if (typeof String.prototype.startsWith != 'function') {
 		String.prototype.startsWith = function (str){
@@ -335,14 +362,31 @@ angular.module('starter.controllers', [])
 	$scope.login = function() {
 		var ref = window.open(urlGoogle, '_blank', 'location=no');
 		ref.addEventListener('loadstart', refLoadStart);
-			var baseURL = "https://iswearbox.herokuapp.com/user"
+		
+		var callbackURL = "https://iswearbox.herokuapp.com/user"
 	 
 		function refLoadStart(event) {
-			if((event.url).startsWith(baseURL)) {
+			if((event.url).startsWith(callbackURL)) {
+			    window.location="index.html";
 				ref.close();
 			}
 		}
 	}
 	
+})
 
+.controller('LogoutCtrl', function($scope, $http, $location, $state) {
+	
+	var baseURL = "https://iswearbox.herokuapp.com"
+	
+	$scope.logout = function() {
+		$http.get(baseURL +'/logout')
+		.success(function(data, status, headers, config){
+			window.location="login.html";
+		})
+		.error(function(data, status, headers, config){
+			alert('Error: ' + data);
+		});
+	}
+	
 });
