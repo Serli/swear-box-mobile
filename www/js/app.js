@@ -1,7 +1,10 @@
 angular.module('starter', ['ionic', 'starter.controllers'])
 
 
-.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
+	
+	$ionicConfigProvider.tabs.position('bottom');
+	
   $stateProvider
 
   .state('app', {
@@ -23,7 +26,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   .state('app.members', {
     url: "/members",
     views: {
-      'menuContent': {
+      'tab-members': {
         templateUrl: "html/members.html",
         controller: 'MembersCtrl'
       }
@@ -33,7 +36,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   .state('app.help', {
     url: "/help",
     views: {
-      'menuContent': {
+      'tab-help': {
         templateUrl: "html/help.html"
       }
     }
@@ -42,7 +45,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     .state('app.logout', {
     url: "/logout",
     views: {
-      'menuContent': {
+      'tab-logout': {
         templateUrl: "html/logout.html",
 		controller: 'LogoutCtrl'
       }
@@ -52,7 +55,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     .state('app.admin', {
       url: "/admin",
       views: {
-        'menuContent': {
+        'tab-admin': {
           templateUrl: "html/admin.html",
           controller: 'AdminCtrl'
         }
@@ -62,7 +65,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   .state('app.single', {
     url: "/members/:idMember",
     views: {
-      'menuContent': {
+      'tab-admin': {
         templateUrl: "html/member.html",
         controller: 'AdminCtrl'
       }

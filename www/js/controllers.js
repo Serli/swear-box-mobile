@@ -6,7 +6,7 @@ angular.module('starter.controllers', [])
 	 *--------------------------- INITIALISATION ---------------------------*
 	 *----------------------------------------------------------------------*/
 	
-	var baseURL = "https://iswearbox.herokuapp.com"
+	var baseURL = "https://iswear-box.herokuapp.com"
 	
 	$rootScope.members = {};
 	getMembers();
@@ -45,7 +45,7 @@ angular.module('starter.controllers', [])
 	 *--------------------------- INITIALISATION ---------------------------*
 	 *----------------------------------------------------------------------*/
 	
-	var baseURL = "https://iswearbox.herokuapp.com"
+	var baseURL = "https://iswear-box.herokuapp.com"
 	
 	$scope.idMember = $stateParams.idMember;
 
@@ -357,13 +357,13 @@ angular.module('starter.controllers', [])
 		};
 	}
 	 
-	var urlGoogle = 'https://accounts.google.com/o/oauth2/auth?client_id=1059228714691-isee43o6gmjvd71bdol5m3deg5f5u7vu.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fiswearbox.herokuapp.com%2Foauth2callback%3Fclient_name%3DGoogle2Client&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code'
+	var urlGoogle = 'https://accounts.google.com/o/oauth2/auth?client_id=1059228714691-isee43o6gmjvd71bdol5m3deg5f5u7vu.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fiswear-box.herokuapp.com%2Foauth2callback%3Fclient_name%3DGoogle2Client&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code'
 	
 	$scope.login = function() {
 		var ref = window.open(urlGoogle, '_blank', 'location=no');
 		ref.addEventListener('loadstart', refLoadStart);
 		
-		var callbackURL = "https://iswearbox.herokuapp.com/user"
+		var callbackURL = "https://iswear-box.herokuapp.com/user"
 	 
 		function refLoadStart(event) {
 			if((event.url).startsWith(callbackURL)) {
