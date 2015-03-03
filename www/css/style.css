@@ -10,6 +10,11 @@
     width:10em;
 }
 
+.dimension-img-aide
+{
+	height: 27em;
+}
+
 .image-click
 {
 	cursor:pointer
@@ -25,18 +30,6 @@ p{
 	margin: 0 0 0px;
 }
 
-.legend-number{
-	color:red;
-}
-
-.legend-title{
-	font-weight:bold;
-}
-
-.padding-p{
-	padding-bottom: 5px;
-}
-
-.padding-label{
-	padding-bottom: 10px;
+.slider-pager {
+  bottom: 5px;
 }
