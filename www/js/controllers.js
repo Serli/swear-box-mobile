@@ -128,7 +128,6 @@ angular.module('starter.controllers', [])
         destinationType: destinationType.DATA_URL,
         sourceType: pictureSource.PHOTOLIBRARY,
 		targetWidth: 200, targetHeight: 200 });
-      
     }
     
     // Called if something bad happens.

@@ -10,11 +10,6 @@
     width:10em;
 }
 
-.dimension-img-aide
-{
-	height: 27em;
-}
-
 .image-click
 {
 	cursor:pointer
@@ -25,11 +20,10 @@
 	text-align : center
 }
 
-p{
-	text-align : justify;
-	margin: 0 0 0px;
-}
-
 .slider-pager {
   bottom: 5px;
+}
+
+.item-text-wrap {
+  text-align : justify;
 }
