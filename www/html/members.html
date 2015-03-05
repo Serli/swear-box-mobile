@@ -5,11 +5,11 @@
 	
 		<div class="list">
 			<div ng-repeat="member in members">
-				<a class="item item-thumbnail-left" href="" ng-click="increase(member.idPerson)"> 
+				<div class="item item-thumbnail-left" href="" ng-click="increase(member.idPerson)"> 
 					<img ng-src={{member.picture}}>
 					<h2>{{member.firstname}} {{member.name}}</h2>
 					<p>{{(member.debt)/100}} €</p>
-				</a>
+				</div>
 			</div>
 		</div>
 		

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('MembersCtrl', function($scope, $ionicModal, $http, $stateParams, $rootScope, $location) {
+.controller('MembersCtrl', function($scope, $ionicModal, $http, $stateParams, $rootScope, $location, $ionicLoading) {
 	
 	/*----------------------------------------------------------------------*
 	 *--------------------------- INITIALISATION ---------------------------*
@@ -10,6 +10,7 @@ angular.module('starter.controllers', [])
 	
 	$rootScope.members = {};
 	getMembers();
+	$ionicLoading.hide();
 
 	/*----------------------------------------------------------------------*
 	 *----------------------------- FUNCTIONS ------------------------------*
@@ -39,7 +40,7 @@ angular.module('starter.controllers', [])
 	
 })
 
-.controller('AdminCtrl', function($scope, $ionicModal, $http, $stateParams, $rootScope, $location) {
+.controller('AdminCtrl', function($scope, $ionicModal, $http, $stateParams, $rootScope, $location, $ionicLoading, $jrCrop) {
 	
 	/*----------------------------------------------------------------------*
 	 *--------------------------- INITIALISATION ---------------------------*
@@ -80,20 +81,27 @@ angular.module('starter.controllers', [])
 		});
 	};
 	
-	// Function which manage the loading picture.
-	//----------------------------------------------------------------------
-	function chargementImage(s, h) {
-		$(s).show();
-		$(h).hide();
-	}
-	
     var pictureSource=navigator.camera.PictureSourceType;
     var destinationType=navigator.camera.DestinationType;
 	
 		//----------------------------------------------------------------------
+	function cropImagePathToData(imagePath) {
+		$jrCrop.crop({
+		    url: imagePath,
+		    width: 200,
+		    height: 200
+		}).then(function(canvas) {
+		    updateImage(canvas.toDataURL());
+		}, function() {
+		    onFail();
+		});
+	};
+
+		//---------------------------------------------------------------------
 	function updateImage(imageData) {
-		//chargementImage('#span-load'+$scope.idImage,'#img'+$scope.idImage);
-		
+		$ionicLoading.show({ template: "Chargement de la nouvelle image" });
+
+	    imageData = imageData.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 		var dataObj = {
 			image64 : imageData
 		};			
@@ -101,10 +109,14 @@ angular.module('starter.controllers', [])
 		$http.put(baseURL + '/members/image/' + $scope.idImage, dataObj)
 		.success(function (data, status, headers, config) {
 			getMembers();
-			//chargementImage('#img'+$scope.idImage,'#span-load'+$scope.idImage);
+			$ionicLoading.hide();
 		})
 		.error(function (data, status, headers, config) {
-            alert('Error: ' + data);
+			$ionicLoading.show({
+		      template: 'Error: ' + data,
+	          noBackdrop: true,
+		      duration: 1000
+		    });
         });
 	};
 	
@@ -113,9 +125,13 @@ angular.module('starter.controllers', [])
     $scope.capturePhoto = function (id) {
 		$scope.idImage = id;
       // Take picture using device camera and retrieve image as base64-encoded string
-      navigator.camera.getPicture(updateImage, onFail, { quality: 50, 
-        destinationType: destinationType.DATA_URL, correctOrientation : true,
-		targetWidth: 200, targetHeight: 200 });
+      navigator.camera.getPicture(cropImagePathToData, onFail, {
+      	quality: 50, 
+        destinationType: destinationType.FILE_URI,
+        correctOrientation : true,
+        targetWidth: 200,
+		targetHeight: 354
+      });
       
     }
 
@@ -124,16 +140,23 @@ angular.module('starter.controllers', [])
     $scope.getPhoto = function(id) {
     	$scope.idImage = id;
       // Retrieve image file location from specified source
-      navigator.camera.getPicture(updateImage, onFail, { quality: 50,
-        destinationType: destinationType.DATA_URL,
+      navigator.camera.getPicture(cropImagePathToData, onFail, {
+      	quality: 50,
+        destinationType: destinationType.FILE_URI,
         sourceType: pictureSource.PHOTOLIBRARY,
-		targetWidth: 200, targetHeight: 200 });
+		targetWidth: 200,
+		targetHeight: 354
+	  });
     }
     
     // Called if something bad happens.
     //------------------------------------
     function onFail(message) {
-      alert('Failed because: ' + message);
+    	$ionicLoading.show({
+	      template: message,
+	      noBackdrop: true,
+	      duration: 1000
+	    });
     }
 	
 	/*----------------------------------------------------------------------*
@@ -348,8 +371,8 @@ angular.module('starter.controllers', [])
 	};
 })
 
-.controller('LoginCtrl', function($scope, $state) {
-	
+.controller('LoginCtrl', function($scope, $state, $ionicLoading) {
+	$ionicLoading.hide();
 	if (typeof String.prototype.startsWith != 'function') {
 		String.prototype.startsWith = function (str){
 			return this.indexOf(str) == 0;
@@ -359,11 +382,13 @@ angular.module('starter.controllers', [])
 	var urlGoogle = 'https://accounts.google.com/o/oauth2/auth?client_id=1059228714691-isee43o6gmjvd71bdol5m3deg5f5u7vu.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fiswear-box.herokuapp.com%2Foauth2callback%3Fclient_name%3DGoogle2Client&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code'
 	
 	$scope.login = function() {
+		$ionicLoading.show({ template: "Connexion..." });
+
 		var ref = window.open(urlGoogle, '_blank', 'location=no');
 		ref.addEventListener('loadstart', refLoadStart);
 		
 		var callbackURL = "https://iswear-box.herokuapp.com/user"
-	 
+
 		function refLoadStart(event) {
 			if((event.url).startsWith(callbackURL)) {
 			    window.location="index.html";
@@ -374,17 +399,21 @@ angular.module('starter.controllers', [])
 	
 })
 
-.controller('LogoutCtrl', function($scope, $http, $location, $state) {
-	
+.controller('LogoutCtrl', function($scope, $http, $location, $state, $ionicLoading) {
 	var baseURL = "https://iswearbox.herokuapp.com"
 	
 	$scope.logout = function() {
+		$ionicLoading.show({ template: "Déconnexion..." });
 		$http.get(baseURL +'/logout')
 		.success(function(data, status, headers, config){
 			window.location="login.html";
 		})
 		.error(function(data, status, headers, config){
-			alert('Error: ' + data);
+			$ionicLoading.show({
+				template: 'Error: ' + data,
+				noBackdrop: true,
+				duration: "1000"
+			});
 		});
 	}
 	
