@@ -40,7 +40,7 @@ angular.module('starter.controllers', [])
 	
 })
 
-.controller('AdminCtrl', function($scope, $ionicModal, $http, $stateParams, $rootScope, $location, $ionicLoading, $jrCrop) {
+.controller('AdminCtrl', function($scope, $ionicModal, $http, $stateParams, $rootScope, $location, $ionicLoading, $ionicPopup) {
 	
 	/*----------------------------------------------------------------------*
 	 *--------------------------- INITIALISATION ---------------------------*
@@ -81,25 +81,61 @@ angular.module('starter.controllers', [])
 		});
 	};
 	
+	//----------------------------------------------------------------------
     var pictureSource=navigator.camera.PictureSourceType;
     var destinationType=navigator.camera.DestinationType;
-	
-		//----------------------------------------------------------------------
-	function cropImagePathToData(imagePath) {
-		$jrCrop.crop({
-		    url: imagePath,
-		    width: 200,
-		    height: 200
-		}).then(function(canvas) {
-		    updateImage(canvas.toDataURL());
+	var jcrop_api;
+
+	//----------------------------------------------------------------------
+	$scope.cropping = function() {
+		jQuery('#target').Jcrop({
+			onSelect: updateCoords
 		}, function() {
-		    onFail();
+			jcrop_api = this;
+			jcrop_api.setSelect([0,0,200,200]);
+			jcrop_api.setOptions({
+				allowSelect: true,
+				allowMove: true,
+				allowResize: false,
+				aspectRatio: 1/1,
+				minSize: [ 200, 200 ],
+				maxSize: [ 200, 200 ]
+			});
+			jcrop_api.focus();
 		});
 	};
+	//----------------------------------------------------------------------
+	function updateCoords(c)
+	{
+		document.getElementById('x').value = c.x;
+		document.getElementById('y').value = c.y;
+		document.getElementById('w').value = c.w;
+		document.getElementById('h').value = c.h;
+	};
 
-		//---------------------------------------------------------------------
+	//----------------------------------------------------------------------
+	$scope.crop = function() {
+		var x = document.getElementById("x").value; 
+		var y = document.getElementById("y").value; 
+		var w = document.getElementById("w").value; 
+		var h = document.getElementById("h").value;
+
+		var canvas = document.createElement('canvas');
+		canvas.width  = 200;
+		canvas.height = 200;
+
+  		var ctx = canvas.getContext('2d');
+		ctx.drawImage(document.getElementById('target'), 0, y, w, h, 0, 0, 200, 200);
+		updateImage(canvas.toDataURL());
+
+		$scope.modalCrop.hide();
+		$scope.modalData.src = '';
+		jcrop_api.destroy();
+	};
+
+	//---------------------------------------------------------------------
 	function updateImage(imageData) {
-		$ionicLoading.show({ template: "Chargement de la nouvelle image" });
+		//$ionicLoading.show({ template: "Chargement de la nouvelle image" });
 
 	    imageData = imageData.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 		var dataObj = {
@@ -109,7 +145,7 @@ angular.module('starter.controllers', [])
 		$http.put(baseURL + '/members/image/' + $scope.idImage, dataObj)
 		.success(function (data, status, headers, config) {
 			getMembers();
-			$ionicLoading.hide();
+			//$ionicLoading.hide();
 		})
 		.error(function (data, status, headers, config) {
 			$ionicLoading.show({
@@ -125,7 +161,7 @@ angular.module('starter.controllers', [])
     $scope.capturePhoto = function (id) {
 		$scope.idImage = id;
       // Take picture using device camera and retrieve image as base64-encoded string
-      navigator.camera.getPicture(cropImagePathToData, onFail, {
+      navigator.camera.getPicture(openCrop, onFail, {
       	quality: 50, 
         destinationType: destinationType.FILE_URI,
         correctOrientation : true,
@@ -140,7 +176,7 @@ angular.module('starter.controllers', [])
     $scope.getPhoto = function(id) {
     	$scope.idImage = id;
       // Retrieve image file location from specified source
-      navigator.camera.getPicture(cropImagePathToData, onFail, {
+      navigator.camera.getPicture(openCrop, onFail, {
       	quality: 50,
         destinationType: destinationType.FILE_URI,
         sourceType: pictureSource.PHOTOLIBRARY,
@@ -165,7 +201,29 @@ angular.module('starter.controllers', [])
 	
 	// Form data for the modals
 	$scope.modalData = {};
+	
 
+	/*--------------------------------MODIFY--------------------------------*/
+
+	// Create the crop modal that we will use later
+	$ionicModal.fromTemplateUrl('html/cropPicture.html', {
+		scope: $scope
+	}).then(function(modal) {
+		$scope.modalCrop = modal;
+	});
+
+	// Triggered in the crop modal to close it
+	$scope.closeCrop = function() {
+		$scope.modalCrop.hide();
+		$scope.modalData.src = '';
+		jcrop_api.destroy();
+	};
+
+	// Open the crop modal
+	function openCrop(imagePath) {
+		$scope.modalData.src = imagePath;
+		$scope.modalCrop.show();
+	};
 	/*--------------------------------MODIFY--------------------------------*/
 	
 	// Create the modify modal that we will use later
