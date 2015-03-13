@@ -161,9 +161,9 @@ angular.module('starter.controllers', [])
     $scope.capturePhoto = function (id) {
 		$scope.idImage = id;
       // Take picture using device camera and retrieve image as base64-encoded string
-      navigator.camera.getPicture(openCrop, onFail, {
+      navigator.camera.getPicture(updateImage, onFail, {
       	quality: 50, 
-        destinationType: destinationType.FILE_URI,
+        destinationType: destinationType.DATA_URL,
         correctOrientation : true,
         targetWidth: 200,
 		targetHeight: 354
@@ -176,12 +176,14 @@ angular.module('starter.controllers', [])
     $scope.getPhoto = function(id) {
     	$scope.idImage = id;
       // Retrieve image file location from specified source
-      navigator.camera.getPicture(openCrop, onFail, {
+      navigator.camera.getPicture(updateImage, onFail, {
       	quality: 50,
-        destinationType: destinationType.FILE_URI,
+        destinationType: destinationType.DATA_URL,
         sourceType: pictureSource.PHOTOLIBRARY,
+  		allowEdit : true,
 		targetWidth: 200,
-		targetHeight: 354
+		targetHeight: 354,
+ 		saveToPhotoAlbum: true
 	  });
     }
     
@@ -437,7 +439,7 @@ angular.module('starter.controllers', [])
 		};
 	}
 	 
-	var urlGoogle = 'https://accounts.google.com/o/oauth2/auth?client_id=1059228714691-isee43o6gmjvd71bdol5m3deg5f5u7vu.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fiswear-box.herokuapp.com%2Foauth2callback%3Fclient_name%3DGoogle2Client&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code'
+	var urlGoogle = 'https://accounts.google.com/o/oauth2/auth?client_id=353691959302-o4dgc694ejueippvun2ippete4a6sd3h.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fiswear-box.herokuapp.com%2Foauth2callback%3Fclient_name%3DGoogle2Client&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code'
 	
 	$scope.login = function() {
 		$ionicLoading.show({ template: "Connexion..." });
