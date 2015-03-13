@@ -447,11 +447,18 @@ angular.module('starter.controllers', [])
 		var ref = window.open(urlGoogle, '_blank', 'location=no');
 		ref.addEventListener('loadstart', refLoadStart);
 		
-		var callbackURL = "https://iswear-box.herokuapp.com/user"
-
+		var URL = "https://iswear-box.herokuapp.com/";
+		var callbackURL = URL+"user";
+		var errorURL = URL+"error";
+		
 		function refLoadStart(event) {
 			if((event.url).startsWith(callbackURL)) {
 			    window.location="index.html";
+				ref.close();
+			}
+			if((event.url).startsWith(errorURL)) {
+			    window.location="error.html";
+			    $ionicLoading.hide();
 				ref.close();
 			}
 		}
