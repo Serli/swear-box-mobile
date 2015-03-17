@@ -3,8 +3,6 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
 .config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
 	
-	$ionicConfigProvider.tabs.position('bottom');
-	
   $stateProvider
 
   .state('app', {
